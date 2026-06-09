@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧬 MOI Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 25px;
+            background: #f5f7fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 { color: #2d6a4f; text-align: center; }
+        .param-group {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        label { display: block; margin: 10px 0 4px; font-weight: bold; }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        select { background: white; }
+        button {
+            background-color: #2d6a4f;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px 5px;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #1b4d3a; }
+        .result-box {
+            background: #f1f8f4;
+            padding: 20px;
+            border-left: 5px solid #2d6a4f;
+            margin-top: 20px;
+            display: none;
+        }
+        .result-box p { margin: 8px 0; }
+        .log-value { font-weight: bold; font-size: 1.3em; color: #0d3b2e; }
+        .titer-value { font-size: 2em; color: #c0392b; font-weight: bold; }
+        .footer { text-align: center; margin-top: 20px; color: #888; font-style: italic; }
+        .date { color: #666; font-size: 0.9em; }
+        hr { border: 0.5px solid #e0e0e0; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧬 MOI Calculator</h1>
+
+    <div class="param-group">
+        <h3>🧪 Parameters</h3>
+        <label for="mode">Select calculation mode:</label>
+        <select id="mode" onchange="toggleFields()">
+            <option value="moi">Calculate MOI</option>
+            <option value="volume">Calculate required virus volume</option>
+        </select>
+
+        <label for="sampleID">Sample ID (optional):</label>
+        <input type="text" id="sampleID" placeholder="e.g., AD-202-01">
+
+        <label for="titerExp">Viral Titer (enter <strong>exponent</strong> of 10):</label>
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <span>10^</span>
+            <input type="number" id="titerExp" value="7" step="any" style="flex:1;">
+            <span style="font-size:0.9em; color:#666;">(e.g., 7 for 10⁷)</span>
+        </div>
+
+        <label for="cellConc">Cell concentration (cells/mL):</label>
+        <input type="number" id="cellConc" value="1000000" step="any">
+
+        <label for="cellVol">Volume of cell suspension (mL):</label>
+        <input type="number" id="cellVol" value="1.0" step="any">
+
+        <!-- Field for MOI mode (virus volume) -->
+        <div id="volField">
+            <label for="virusVol">Virus stock volume added (mL):</label>
+            <input type="number" id="virusVol" value="0.5" step="any">
+        </div>
+
+        <!-- Field for Volume mode (desired MOI) -->
+        <div id="moiField" style="display: none;">
+            <label for="desiredMOI">Desired MOI:</label>
+            <input type="number" id="desiredMOI" value="5" step="any">
+        </div>
+    </div>
+
+    <div style="text-align: center;">
+        <button onclick="calculate()">⚡ Calculate</button>
+        <button onclick="clearAll()">🗑️ Clear</button>
+    </div>
+
+    <div id="resultBox" class="result-box">
+        <h3>📊 Results</h3>
+        <div id="resultContent"></div>
+    </div>
+
+    <div class="footer">Powered By Pourdad Panahi</div>
+
+    <script>
+        function toggleFields() {
+            const mode = document.getElementById('mode').value;
+            document.getElementById('volField').style.display = mode === 'moi' ? 'block' : 'none';
+            document.getElementById('moiField').style.display = mode === 'volume' ? 'block' : 'none';
+        }
+
+        function calculate() {
+            // Get values
+            const sampleID = document.getElementById('sampleID').value.trim();
+            const titerExp = parseFloat(document.getElementById('titerExp').value);
+            const cellConc = parseFloat(document.getElementById('cellConc').value);
+            const cellVol = parseFloat(document.getElementById('cellVol').value);
+            const mode = document.getElementById('mode').value;
+
+            // Validate basic inputs
+            if (isNaN(titerExp) || isNaN(cellConc) || isNaN(cellVol) || cellConc <= 0 || cellVol <= 0) {
+                alert('Please fill all numeric fields with valid positive numbers.');
+                return;
+            }
+
+            const titer = Math.pow(10, titerExp);
+            const cells = cellConc * cellVol;
+            let resultHTML = '';
+            const now = new Date().toLocaleString();
+            
+            resultHTML += `<p class="date">Calculation Date: ${now}</p>`;
+            if (sampleID) resultHTML += `<p><strong>Sample ID:</strong> ${sampleID}</p>`;
+            resultHTML += `<p><strong>Viral Titer:</strong> 10^${titerExp} = ${titer.toExponential(2)} PFU/mL (or TU/mL)</p>`;
+            resultHTML += `<p><strong>Total Cells:</strong> ${cells.toLocaleString()} cells</p>`;
+            resultHTML += `<hr>`;
+
+            if (mode === 'moi') {
+                const virusVol = parseFloat(document.getElementById('virusVol').value);
+                if (isNaN(virusVol) || virusVol < 0) {
+                    alert('Please enter a valid virus volume.');
+                    return;
+                }
+                if (cells === 0) {
+                    alert('Number of cells cannot be zero.');
+                    return;
+                }
+                const moi = (titer * virusVol) / cells;
+                resultHTML += `<p class="log-value">MOI = ${moi.toFixed(4)}</p>`;
+                if (moi < 1) {
+                    resultHTML += `<p>➡️ Each cell has ~${(moi*100).toFixed(1)}% chance of infection (less than 1 viral particle per cell on average).</p>`;
+                } else if (Math.abs(moi - 1) < 0.001) {
+                    resultHTML += `<p>➡️ Theoretically, there is 1 viral particle for every 1 cell (on average).</p>`;
+                } else {
+                    resultHTML += `<p>➡️ On average, every cell receives ${moi.toFixed(0)} viral particles.</p>`;
+                }
+            } else { // volume mode
+                const desiredMOI = parseFloat(document.getElementById('desiredMOI').value);
+                if (isNaN(desiredMOI) || desiredMOI < 0) {
+                    alert('Please enter a valid desired MOI.');
+                    return;
+                }
+                if (titer === 0) {
+                    alert('Viral titer cannot be zero.');
+                    return;
+                }
+                const volVirus_mL = (desiredMOI * cells) / titer;
+                const volVirus_uL = volVirus_mL * 1000;
+                resultHTML += `<p class="log-value">Required Virus Volume:</p>`;
+                resultHTML += `<p class="titer-value">${volVirus_mL.toFixed(4)} mL</p>`;
+                resultHTML += `<p class="titer-value">${volVirus_uL.toFixed(2)} µL</p>`;
+            }
+
+            document.getElementById('resultContent').innerHTML = resultHTML;
+            document.getElementById('resultBox').style.display = 'block';
+        }
+
+        function clearAll() {
+            document.getElementById('sampleID').value = '';
+            document.getElementById('titerExp').value = 7;
+            document.getElementById('cellConc').value = 1000000;
+            document.getElementById('cellVol').value = 1.0;
+            document.getElementById('virusVol').value = 0.5;
+            document.getElementById('desiredMOI').value = 5;
+            document.getElementById('resultBox').style.display = 'none';
+            toggleFields(); // reset field visibility
+        }
+    </script>
+</body>
+</html>
