@@ -11,7 +11,7 @@ This tool helps you quickly determine either the MOI or the required virus volum
 - Printable/PDF-friendly output
 
 ## 🚀 Live Demo
-[Click here to use the calculator](https://pourdadp.github.io/MOI-Calculator/)
+[Click here to use the calculator](https://pourdadp.github.io/MOI-Calculator/MOI_Calculator)
 
 ## 👨‍🔬 Author
 **Pourdad Panahi** – Biotechnologist with expertise in virology and bioinformatics.
