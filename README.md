@@ -1,17 +1,42 @@
-# 🧬 MOI Calculator
+# 🧫 MOI Calculator
 
-A simple, browser-based Multiplicity of Infection (MOI) calculator for virology labs.  
-This tool helps you quickly determine either the MOI or the required virus volume.
+An interactive, browser-based **Multiplicity of Infection (MOI) calculator** for virology and cell culture labs.  
+Calculate **MOI** or **required virus volume** with dynamic input fields—no installation needed.
 
 ## 🔬 Features
-- Dynamic mode selection (Calculate MOI or virus volume)
-- Logarithmic viral titer input (enter exponent only)
-- Automatic cell count calculation from concentration and volume
-- Date/time stamp on results
-- Printable/PDF-friendly output
+
+- **Two calculation modes:** MOI (from titer, volume, cells) and Required Volume (from desired MOI)
+- **Logarithmic titer input:** enter only the exponent (e.g., 7 for 10⁷)
+- **Cell count computed from concentration × suspension volume**
+- **Real-time field switching** depending on selected mode
+- **Sample ID logging** with date/time stamp
+- **Responsive Bootstrap UI** – works on desktop and mobile
+- **Printable results** with browser print (Ctrl+P)
 
 ## 🚀 Live Demo
-[Click here to use the calculator](https://pourdadp.github.io/MOI-Calculator/MOI_Calculator)
+
+👉 **[Launch MOI Calculator](https://pourdadp.github.io/MOI-Calculator/MOI_Calculator)**
+
+## 🛠️ Tech Stack
+
+- HTML5 / CSS3 / Bootstrap 5
+- Vanilla JavaScript
+- No server, no dependencies
+
+## 📸 Screenshot
+
+*Add a screenshot of the calculator here*
 
 ## 👨‍🔬 Author
-**Pourdad Panahi** – Biotechnologist with expertise in virology and bioinformatics.
+
+**Pourdad Panahi** – Biotechnologist & Bioinformatics Developer  
+18+ years of wet-lab experience (cell culture, real-time PCR, virus cultivation, ELISA).  
+Building digital tools for the life sciences.
+
+- **Portfolio:** [pourdadp.github.io](https://pourdadp.github.io)
+- **GitHub:** [github.com/pourdadp](https://github.com/pourdadp)
+- **LinkedIn:** [linkedin.com/in/pourdad-panahi](https://linkedin.com/in/pourdad-panahi)
+
+---
+
+📄 **Powered By Pourdad Panahi**
